@@ -1,24 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Mes voyages!{% endblock %}</title>
-        
-        {% block stylesheets %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-          
-        
-    </head>
-    <body>
-        
-{% block body %} 
-    <h1>Page d'accueil<h1/>
+{% extends "basefront.html.twig" %}
+{% block body %}
+<h1>Page des voyages</h1>
 {% endblock %}
-
-    </body>
-</html>
-
-
 
 
 
