@@ -9,6 +9,8 @@ class VoyagesController extends AbstractController {
     
     #[Route('/voyages', name: 'voyages')]
     public function index(): Response {
-       return $this->render("pages/voyages.html.twig");  
-    }
+        return $this->render("pages/voyages.html.twig");
+    }    
+
+    
 }
