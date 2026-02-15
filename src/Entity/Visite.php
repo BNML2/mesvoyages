@@ -21,7 +21,7 @@ class Visite
     private ?string $pays = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $datecreation = null;
+    private ?\DateTimeInterface $datecreation = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $note = null;
@@ -64,16 +64,25 @@ class Visite
         return $this;
     }
 
-    public function getDatecreation(): ?\DateTime
+    public function getDatecreation(): ?\DateTimeInterface
     {
         return $this->datecreation;
     }
 
-    public function setDatecreation(?\DateTime $datecreation): static
+    public function setDatecreation(?\DateTimeInterface $datecreation): static
     {
         $this->datecreation = $datecreation;
 
         return $this;
+    }
+    
+    public function getDatecreationString(): string
+    {
+        if($this->datecreation == null){
+            return "";
+        }else{
+            return $this->datecreation->format('d/m/Y');
+        }
     }
 
     public function getNote(): ?int
