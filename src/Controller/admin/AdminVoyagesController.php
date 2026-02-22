@@ -1,45 +1,65 @@
-{% extends "baseadmin.html.twig" %}
+<?php
+namespace App\Controller\admin;
 
-{% block body %}
-                    
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>
-                    Ville
-                </th>
-                <th>
-                    Pays
-                </th>
-                <th>
-                    Date
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for visite in visites %}
-                <tr>
-                    <td>
-                        <h5 class="text-primary">
-                            {{ visite.ville }}
-                        </h5>
-                    </td>
-                    <td>
-                        {{ visite.pays }}
-                    </td>
-                    <td>
-                        {{ visite.datecreationstring }}
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-secondary">Editer</a>
-                        <a href="{{ path('admin.voyage.suppr', {id:visite.id}) }}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de vouloir supprimer {{ visite.ville }} ?')">Supprimer</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-            
-{% endblock %}
+use App\Entity\Visite;
+use App\Form\VisiteType;
+use App\Repository\VisiteRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * Description of AdminVoyagesController
+ *
+ */
+class AdminVoyagesController extends AbstractController {
+    
+    /**
+     * 
+     * @var VisiteRepository
+     */
+    private $repository;
+    
+    /**
+     * 
+     * @param VisiteRepository $repository
+     */
+    public function __construct(VisiteRepository $repository) {
+        $this->repository = $repository;
+    }
+    
+    #[Route('/admin', name: 'admin.voyages')]
+    public function index(): Response {
+        $visites = $this->repository->findAllOrderBy('datecreation', 'DESC');
+        return $this->render("admin/admin.voyages.html.twig", [
+            'visites' => $visites
+        ]);
+    }   
+    
+    #[Route('/admin/suppr/{id}', name: 'admin.voyage.suppr')]
+    public function suppr(int $id): Response{
+        $visite = $this->repository->find($id);
+        $this->repository->remove($visite);
+        return $this->redirectToRoute('admin.voyages');
+    }
+    
+    #[Route('/admin/edit/{id}', name: 'admin.voyage.edit')]
+    public function edit(int $id, Request $request): Response{
+        $visite = $this->repository->find($id);
+        $formVisite = $this->createForm(VisiteType::class, $visite);
+
+        $formVisite->handleRequest($request);
+        if($formVisite->isSubmitted() && $formVisite->isValid()){
+            $this->repository->add($visite);
+            return $this->redirectToRoute('admin.voyages');
+        }
+
+        return $this->render("admin/admin.voyage.edit.html.twig", [
+            'visite' => $visite,
+            'formvisite' => $formVisite->createView()
+        ]);
+    }
+    
+
+}
