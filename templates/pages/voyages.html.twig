@@ -1,72 +1,31 @@
 {% extends "basefront.html.twig" %}
 {% block body %}
-    <table class="table table-striped">
-        <thead>
-            <tr>        
-                <th class="text-left align-top" scope="col">
-                    Ville
-                    <a href="{{ path('voyages.sort', {champ:'ville', ordre:'ASC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('voyages.sort', {champ:'ville', ordre:'DESC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">></a>                    
-                    
-                        <div class="form-group mr-1 mb-2">
-                            <input type="text" class="sm" name="recherche">                        
-                            <button type="submit" class="btn btn-primary mb-2 btn-sm">filtrer</button>
-                        </div>
-                    </form>                    
-                </th>
-                <th class="text-left align-top" scope="col">
-                    Pays
-                    <a href="{{ path('voyages.sort', {champ:'pays', ordre:'ASC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('voyages.sort', {champ:'pays', ordre:'DESC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">></a>                    
-                    
-                        <div class="form-group mr-1 mb-2">
-                            <input type="text" class="sm" name="recherche">                        
-                            <button type="submit" class="btn btn-primary mb-2 btn-sm">filtrer</button>
-                        </div>
-                    </form> 
-                </th>
-                <th class="text-end align-top" scope="col">
-                    Note
-                    <a href="{{ path('voyages.sort', {champ:'note', ordre:'ASC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('voyages.sort', {champ:'note', ordre:'DESC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">></a>                    
-                </th>
-                <th class="text-center align-top" scope="col">
-                    Date
-                    <a href="{{ path('voyages.sort', {champ:'datecreation', ordre:'ASC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('voyages.sort', {champ:'datecreation', ordre:'DESC'}) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">></a>                    
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for visite in visites %}
-                <tr>
-                    <td>
-                        <h5 class="text-primary">
-                            <a href="#">{{ visite.ville }}</a>
-                            <a href="{{ path('voyages.showone', {id:visite.id}) }}">{{ visite.ville }}</a>
-                        </h5>
-                    </td>
-                    <td>
-                        {{ visite.pays }}
-                    </td>
-                    <td class="text-end">
-                        <strong>
-                            {% if visite.note<10 %}
-                                <div class="text-danger">
-                                    {{ visite.note }}/20
-                                </div>
-                            {% else %}
-                                <div class="text-success">
-                                    {{ visite.note }}/20
-                                </div>                  
-                            {% endif %}
-                        </strong>
-                    </td>
-                    <td class="text-center">
-                        {{ visite.datecreationstring }}
-                    </td>                    
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row mt-3">
+        <div class="col">
+            <h5> {{ visite.datecreationstring }}</h5>
+            <h1 class="text-primary mt-5">{{ visite.ville }}</h1>
+            <h3>{{ visite.pays }}</h3>
+            {% if visite.note>=10 %}
+                <h2 class="text-success mt-5">{{ visite.note }}/20</h2>
+            {% else %}
+                <h2 class="text-danger mt-5">{{ visite.note }}/20</h2>
+            {% endif %}
+            <h5 class="mt-5">t° entre {{ visite.tempmin }}° et {{ visite.tempmax }}°</h5>      
+            <p class="mt-5"><strong>Environnements :</strong></p>
+            {% for environnement in visite.environnements %}
+                {{ environnement.nom }}
+            {% endfor %}                   
+        </div>
+        <div class="col">
+            <!-- emplacement photo -->       
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col md-12">
+            <p><strong>mon avis :</strong></p>
+            <p>
+                {{ visite.avis }}
+            </p>
+        </div>
+    </div>
 {% endblock %}
