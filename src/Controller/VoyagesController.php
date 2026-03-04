@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Repository\VisiteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -42,11 +43,25 @@ class VoyagesController extends AbstractController {
             'visites' => $visites
         ]);
     }
-    #[Route('voyages/voyage/{id}', name: 'voyages.showone')]
+    
+    #[Route('/voyages/recherche/{champ}', name: 'voyages.findallequal')]
+    public function findAllEqual($champ, Request $request): Response{
+        if($this->isCsrfTokenValid('filtre_'.$champ, $request->get('_token'))){
+            $valeur = $request->get("recherche");
+            $visites = $this->repository->findByEqualValue($champ, $valeur);
+            return $this->render("pages/voyages.html.twig", [
+                'visites' => $visites
+            ]);
+        }
+        return $this->redirectToRoute("voyages");
+    }    
+    
+    #[Route('/voyages/voyage/{id}', name: 'voyages.showone')]
     public function showOne($id): Response{
         $visite = $this->repository->find($id);
-        return $this->render("pages/voyage.html.twig",[
-           'visite' => $visite
+        return $this->render("pages/voyage.html.twig", [
+            'visite' => $visite
         ]);
     }
+    
 }
