@@ -9,8 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Description of VoyagesController
- *
- * @author emds
  */
 class VoyagesController extends AbstractController {
     
